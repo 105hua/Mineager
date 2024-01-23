@@ -24,7 +24,7 @@ from typing import Callable, List
 from urllib.parse import urlparse
 
 from mineager.globals import SESSION
-from mineager.plugins import GithubPlugin, JenkinsPlugin, Plugin, SpigetPlugin
+from mineager.plugins import GithubPlugin, JenkinsPlugin, Plugin, SpigetPlugin, ModrinthPlugin
 
 
 class UrlParser:
@@ -34,6 +34,9 @@ class UrlParser:
     _github_regexp = re.compile(r"^/(?P<resource>[^/]+/(?P<name>[^/]+))")
     _jenkins_regexp = re.compile(
         r"^/*(?P<sub_url>(?:/job/[^/]+)+)/(?P<build>(?:\d+|last(?:Successful|Stable|Failed|Unsuccessful)Build))(?P<path>/artifact/(?P<jar_name>.+\.jar$))"
+    )
+    _modrinth_regexp = re.compile(
+        r"^/v2/project/(?P<name>[a-zA-Z0-9-]+)"
     )
 
     _name_regexp = re.compile("^(?P<name>[-a-zA-Z_]+[a-zA-Z])")
@@ -65,6 +68,21 @@ class UrlParser:
         raise NotImplementedUrlParserException(
             f"Unable to parse '{url}' using any of the existing parsers!"
         )
+    
+    @classmethod
+    def _parse_modrinth(cls, url: str):
+        parsed_url = urlparse(url)
+        if "api.modrinth.com" not in parsed_url.netlock:
+            raise InvalidUrlForParser(
+                f"'api.modrinth.com' is not in {parsed_url.netlock} - from {url}"
+            )
+        match = cls._modrinth_regexp.match(parsed_url.path)
+        if not match:
+            raise UrlParsingException(
+                f"Unable to extract plugin info from {parsed_url.path} - full url: {url}"
+            )
+        name = match["name"]
+        return ModrinthPlugin(name=name) # Probably a better way to do this but should work for now.
 
     @classmethod
     def _parse_spigot(cls, url: str) -> SpigetPlugin:

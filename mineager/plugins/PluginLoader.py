@@ -24,11 +24,13 @@ from .GithubPlugin import GithubPlugin
 from .JenkinsPlugin import JenkinsPlugin
 from .Plugin import Plugin
 from .SpigetPlugin import SpigetPlugin
+from .ModrinthPlugin import ModrinthPlugin
 
 PLUGIN_CLASSES: Iterable[Type[Plugin]] = (
     SpigetPlugin,
     GithubPlugin,
     JenkinsPlugin,
+    ModrinthPlugin
 )
 
 
