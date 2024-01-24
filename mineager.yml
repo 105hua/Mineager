@@ -1,0 +1,5 @@
+plugins:
+- name: Simple-Voice-Chat
+  prefix: Simple-Voice-Chat
+  resource: bukkit-2.4.30
+  type: modrinth

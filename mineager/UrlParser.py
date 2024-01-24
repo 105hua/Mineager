@@ -36,7 +36,7 @@ class UrlParser:
         r"^/*(?P<sub_url>(?:/job/[^/]+)+)/(?P<build>(?:\d+|last(?:Successful|Stable|Failed|Unsuccessful)Build))(?P<path>/artifact/(?P<jar_name>.+\.jar$))"
     )
     _modrinth_regexp = re.compile(
-        r"^/v2/project/(?P<name>[a-zA-Z0-9-]+)"
+        r"^/plugin/(?P<name>[a-zA-Z0-9.-]+)/version/(?P<resource>[a-zA-Z0-9.-]+)$"
     )
 
     _name_regexp = re.compile("^(?P<name>[-a-zA-Z_]+[a-zA-Z])")
@@ -72,9 +72,9 @@ class UrlParser:
     @classmethod
     def _parse_modrinth(cls, url: str):
         parsed_url = urlparse(url)
-        if "api.modrinth.com" not in parsed_url.netlock:
+        if "modrinth.com" not in parsed_url.netloc:
             raise InvalidUrlForParser(
-                f"'api.modrinth.com' is not in {parsed_url.netlock} - from {url}"
+                f"'modrinth.com' is not in {parsed_url.netlock} - from {url}"
             )
         match = cls._modrinth_regexp.match(parsed_url.path)
         if not match:
@@ -82,7 +82,8 @@ class UrlParser:
                 f"Unable to extract plugin info from {parsed_url.path} - full url: {url}"
             )
         name = match["name"]
-        return ModrinthPlugin(name=name) # Probably a better way to do this but should work for now.
+        resource = match["resource"]
+        return ModrinthPlugin(name=name, resource=resource) # Probably a better way to do this but should work for now.
 
     @classmethod
     def _parse_spigot(cls, url: str) -> SpigetPlugin:
