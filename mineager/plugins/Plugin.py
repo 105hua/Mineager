@@ -82,7 +82,10 @@ class Version:
         if not self.__is_valid_operand(other):
             return NotImplemented
         if self.name != other.name:
-            return NotImplemented
+            # return NotImplemented
+            print("WARNING: Self name is not equal to other name!")
+            print(f"Self name: {self.name}")
+            print(f"Other name: {other.name}")
         if not hasattr(other, "date"):
             return NotImplemented
         # TODO: Compare versions if they are SEMVER?

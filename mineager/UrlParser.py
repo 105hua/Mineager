@@ -83,6 +83,7 @@ class UrlParser:
             )
         name = match["name"]
         resource = match["resource"]
+        print(f"Name Passed: '{name} {resource}'")
         return ModrinthPlugin(name=name, resource=resource) # Probably a better way to do this but should work for now.
 
     @classmethod
