@@ -74,7 +74,7 @@ class UrlParser:
         parsed_url = urlparse(url)
         if "modrinth.com" not in parsed_url.netloc:
             raise InvalidUrlForParser(
-                f"'modrinth.com' is not in {parsed_url.netlock} - from {url}"
+                f"'modrinth.com' is not in {parsed_url.netloc} - from {url}"
             )
         match = cls._modrinth_regexp.match(parsed_url.path)
         if not match:

@@ -79,13 +79,15 @@ class Version:
         return (self.name, self.version) == (other.name, other.version)
 
     def __lt__(self, other):
+        # Casefold both vars before comparison.
+        cased_self = self.name.casefold()
+        cased_other = other.name.casefold()
         if not self.__is_valid_operand(other):
             return NotImplemented
-        if self.name != other.name:
-            # return NotImplemented
-            print("WARNING: Self name is not equal to other name!")
-            print(f"Self name: {self.name}")
-            print(f"Other name: {other.name}")
+        if cased_self != cased_other:
+            print("WARNING: Self Version is not equal to Other Version!")
+            print(f"Self name: {cased_self}")
+            print(f"Other name: {cased_other}")
         if not hasattr(other, "date"):
             return NotImplemented
         # TODO: Compare versions if they are SEMVER?
